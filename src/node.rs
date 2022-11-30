@@ -12,24 +12,21 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use std::sync::Arc;
-use std::sync::Mutex;
-
-use sensehat::{SenseHat};
+// use sensehat::{SenseHat};
 
 pub struct Node {
-    sensehat: Option<SenseHat>
+    // sensehat: Option<SenseHat>
 }
 
 impl Node {
     pub fn new() -> Node {
         let mut node = Node {
-            sensehat : None
+            // sensehat : None
         };
-        sensehat = SenseHat::new();
-        if sensehat.ok {
-            node.sensehat = sensehat.unwarp();
-        }
+        // sensehat = SenseHat::new();
+        // if sensehat.ok {
+        //     node.sensehat = sensehat.unwarp();
+        // }
         node
     }
 }
