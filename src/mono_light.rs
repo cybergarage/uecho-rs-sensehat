@@ -12,14 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use log::*;
 use std::sync::Arc;
 use std::sync::Mutex;
 
-use echonet::{Device, LocalNode};
-
 use echonet::protocol::{Esv, Property};
 use echonet::util::Bytes;
+use echonet::{Device, Node, RequestHandler};
 
 /// Mono functional lighting (0x0291)
 pub struct MonoLight {
@@ -27,7 +25,7 @@ pub struct MonoLight {
 }
 
 impl MonoLight {
-    pub fn new(node: Arc<Mutex<LocalNode>>) -> Arc<Mutex<MonoLight>> {
+    pub fn new(node: Arc<Mutex<Node>>) -> Arc<Mutex<MonoLight>> {
         let m = Arc::new(Mutex::new(MonoLight {
             dev: Device::new_with_node(0x0291, node), // Switch (supporting JEM-A/HA terminals)
         }));
@@ -42,9 +40,9 @@ impl MonoLight {
     pub fn stop(&mut self) -> bool {
         self.dev.stop()
     }
-    // }
+}
 
-    // impl RequestHandler for MonoLight {
+impl RequestHandler for MonoLight {
     fn property_request_received(&mut self, deoj: u32, esv: Esv, prop: &Property) -> bool {
         // Ignore all messages to other objects in the same node.
         if deoj != self.dev.code() {
@@ -60,10 +58,10 @@ impl MonoLight {
                         let prop_u32 = Bytes::to_u32(prop_bytes);
                         match prop_u32 {
                             0x30 /* On */=> {
-                                self.dev.set_property(prop_code, prop_bytes);
+                                return true;
                             }
                             0x31 /* Off */=> {
-                                self.dev.set_property(prop_code, prop_bytes);
+                                return true;
                             }
                             _ => {
                                 return false;
