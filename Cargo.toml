@@ -8,4 +8,4 @@ edition = "2021"
 [dependencies]
 log = "0.4"
 echonet = "1.0.0"
-sensehat = "1.1.0"
+# sensehat = "1.1.0"
