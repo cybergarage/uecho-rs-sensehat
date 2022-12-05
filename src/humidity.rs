@@ -54,10 +54,10 @@ impl RequestHandler for Humidity {
                 let prop_code = prop.code();
                 match prop_code {
                     0x80 /* Operating status */ => {
-                        return false;
+                        return true;
                     }
                     0xE0 /* Measured value of relative humidity */ => {
-                        return false;
+                        return true;
                     }
                     _ => {
                         return false;
@@ -67,8 +67,11 @@ impl RequestHandler for Humidity {
             Esv::WriteRequest | Esv::WriteReadRequest => {
                 return false;
             }
-            _ => {}
+            _ => {
+                return false;
+            }
         }
-        true
+
+        false
     }
 }
