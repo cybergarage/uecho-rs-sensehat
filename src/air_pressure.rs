@@ -19,7 +19,7 @@ use echonet::protocol::{Esv, Property};
 use echonet::util::Bytes;
 use echonet::{Device, Node, RequestHandler};
 
-/// Mono functional lighting (0x0291)
+/// Air pressure sensor class (0x002D)
 pub struct AirPressure {
     dev: Device,
 }
@@ -27,9 +27,9 @@ pub struct AirPressure {
 impl AirPressure {
     pub fn new(node: Arc<Mutex<Node>>) -> Arc<Mutex<AirPressure>> {
         let m = Arc::new(Mutex::new(AirPressure {
-            dev: Device::new_with_node(0x0291, node), // Switch (supporting JEM-A/HA terminals)
+            dev: Device::new_with_node(0x002D01, node),
         }));
-        // m.lock().unwrap().dev.set_request_handler(m.clone());
+        m.lock().unwrap().dev.set_request_handler(m.clone());
         m
     }
 
@@ -50,31 +50,28 @@ impl RequestHandler for AirPressure {
         }
 
         match esv {
-            Esv::WriteRequest | Esv::WriteReadRequest => {
+            Esv::ReadRequest | Esv::NotificationRequest => {
                 let prop_code = prop.code();
-                let prop_bytes = prop.data();
                 match prop_code {
                     0x80 /* Operating status */ => {
-                        let prop_u32 = Bytes::to_u32(prop_bytes);
-                        match prop_u32 {
-                            0x30 /* On */=> {
-                                return true;
-                            }
-                            0x31 /* Off */=> {
-                                return true;
-                            }
-                            _ => {
-                                return false;
-                            }
-                        }
+                        return true;
+                    }
+                    0xE0 /* Air pressure mesuarement */ => {
+                        return true;
                     }
                     _ => {
                         return false;
                     }
                 }
             }
-            _ => {}
+            Esv::WriteRequest | Esv::WriteReadRequest => {
+                return false;
+            }
+            _ => {
+                return false;
+            }
         }
+
         true
     }
 }
