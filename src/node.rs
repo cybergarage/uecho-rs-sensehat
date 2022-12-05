@@ -12,21 +12,19 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-// use sensehat::{SenseHat};
+use sensehat::SenseHat;
 
-pub struct Node {
-    // sensehat: Option<SenseHat>
+pub struct Node<'a> {
+    sensehat: Option<SenseHat<'a>>,
 }
 
-impl Node {
-    pub fn new() -> Node {
-        let mut node = Node {
-            // sensehat : None
-        };
-        // sensehat = SenseHat::new();
-        // if sensehat.ok {
-        //     node.sensehat = sensehat.unwarp();
-        // }
+impl Node<'_> {
+    pub fn new() -> Node<'static> {
+        let mut node = Node { sensehat: None };
+        let sensehat = SenseHat::new();
+        if sensehat.is_ok() {
+            node.sensehat = Some(sensehat.unwrap());
+        }
         node
     }
 }
