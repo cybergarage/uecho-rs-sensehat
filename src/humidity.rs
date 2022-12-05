@@ -19,7 +19,7 @@ use echonet::protocol::{Esv, Property};
 use echonet::util::Bytes;
 use echonet::{Device, Node, RequestHandler};
 
-/// Mono functional lighting (0x0291)
+/// 3.1.18 Humidity sensor class (0x0012)
 pub struct Humidity {
     dev: Device,
 }
@@ -27,7 +27,7 @@ pub struct Humidity {
 impl Humidity {
     pub fn new(node: Arc<Mutex<Node>>) -> Arc<Mutex<Humidity>> {
         let m = Arc::new(Mutex::new(Humidity {
-            dev: Device::new_with_node(0x0291, node), // Switch (supporting JEM-A/HA terminals)
+            dev: Device::new_with_node(0x001201, node),
         }));
         // m.lock().unwrap().dev.set_request_handler(m.clone());
         m
@@ -50,28 +50,22 @@ impl RequestHandler for Humidity {
         }
 
         match esv {
-            Esv::WriteRequest | Esv::WriteReadRequest => {
+            Esv::ReadRequest | Esv::NotificationRequest => {
                 let prop_code = prop.code();
-                let prop_bytes = prop.data();
                 match prop_code {
                     0x80 /* Operating status */ => {
-                        let prop_u32 = Bytes::to_u32(prop_bytes);
-                        match prop_u32 {
-                            0x30 /* On */=> {
-                                return true;
-                            }
-                            0x31 /* Off */=> {
-                                return true;
-                            }
-                            _ => {
-                                return false;
-                            }
-                        }
+                        return false;
+                    }
+                    0xE0 /* Measured value of relative humidity */ => {
+                        return false;
                     }
                     _ => {
                         return false;
                     }
                 }
+            }
+            Esv::WriteRequest | Esv::WriteReadRequest => {
+                return false;
             }
             _ => {}
         }
