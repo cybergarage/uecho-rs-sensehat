@@ -9,3 +9,4 @@ edition = "2021"
 log = "0.4"
 echonet = "1.0.0"
 # sensehat = "1.1.0"
+sensehat = {git = "https://github.com/rust-embedded-community/sensehat-rs.git"}
