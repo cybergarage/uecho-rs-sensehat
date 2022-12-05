@@ -16,7 +16,6 @@ use std::sync::Arc;
 use std::sync::Mutex;
 
 use echonet::protocol::{Esv, Property};
-use echonet::util::Bytes;
 use echonet::{Device, Node, RequestHandler};
 
 /// 3.1.17 Temperature sensor class (0x0011)
@@ -54,10 +53,10 @@ impl RequestHandler for Temperature {
                 let prop_code = prop.code();
                 match prop_code {
                     0x80 /* Operating status */ => {
-                        return false;
+                        return true;
                     }
                     0xE0 /* Measured temperature value */ => {
-                        return false;
+                        return true;
                     }
                     _ => {
                         return false;
@@ -67,8 +66,11 @@ impl RequestHandler for Temperature {
             Esv::WriteRequest | Esv::WriteReadRequest => {
                 return false;
             }
-            _ => {}
+            _ => {
+                return false;
+            }
         }
+
         false
     }
 }
