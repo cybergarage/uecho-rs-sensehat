@@ -19,7 +19,7 @@ use echonet::protocol::{Esv, Property};
 use echonet::util::Bytes;
 use echonet::{Device, Node, RequestHandler};
 
-/// Mono functional lighting (0x0291)
+/// 3.3.33 Mono functional lighting (0x0291)
 pub struct MonoLight {
     dev: Device,
 }
@@ -27,7 +27,7 @@ pub struct MonoLight {
 impl MonoLight {
     pub fn new(node: Arc<Mutex<Node>>) -> Arc<Mutex<MonoLight>> {
         let m = Arc::new(Mutex::new(MonoLight {
-            dev: Device::new_with_node(0x0291, node), // Switch (supporting JEM-A/HA terminals)
+            dev: Device::new_with_node(0x029101, node),
         }));
         // m.lock().unwrap().dev.set_request_handler(m.clone());
         m
@@ -50,6 +50,20 @@ impl RequestHandler for MonoLight {
         }
 
         match esv {
+            Esv::ReadRequest | Esv::NotificationRequest => {
+                let prop_code = prop.code();
+                match prop_code {
+                    0x80 /* Operating status */ => {
+                        return true;
+                    }
+                    0xB0 /* Illuminance level setting */ => {
+                        return true;
+                    }
+                    _ => {
+                        return false;
+                    }
+                }
+            }
             Esv::WriteRequest | Esv::WriteReadRequest => {
                 let prop_code = prop.code();
                 let prop_bytes = prop.data();
@@ -67,6 +81,9 @@ impl RequestHandler for MonoLight {
                                 return false;
                             }
                         }
+                    }
+                    0xB0 /* Illuminance level setting */ => {
+                        return true;
                     }
                     _ => {
                         return false;
