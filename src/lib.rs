@@ -12,7 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+mod air_pressure;
+mod humidity;
 mod mono_light;
 mod node;
 mod temperature;
-mod humidity;
