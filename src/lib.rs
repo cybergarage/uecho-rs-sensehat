@@ -15,3 +15,4 @@
 mod mono_light;
 mod node;
 mod temperature;
+mod humidity;
