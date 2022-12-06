@@ -12,13 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use echonet::Node;
+use echonet::{Device, Node};
 use sensehat::SenseHat;
 use std::sync::{Arc, Mutex};
 
 pub struct SenseHatNode<'a> {
     node: Arc<Mutex<Node>>,
     sensehat: Option<SenseHat<'a>>,
+    devices: Vec<Device>,
 }
 
 impl SenseHatNode<'_> {
@@ -26,6 +27,7 @@ impl SenseHatNode<'_> {
         let mut node = SenseHatNode {
             node: Node::new(),
             sensehat: None,
+            devices: Vec::new(),
         };
         let sensehat = SenseHat::new();
         if sensehat.is_ok() {
