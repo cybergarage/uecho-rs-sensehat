@@ -16,7 +16,6 @@ use std::sync::Arc;
 use std::sync::Mutex;
 
 use echonet::protocol::{Esv, Property};
-use echonet::util::Bytes;
 use echonet::{Device, Node, RequestHandler};
 
 /// Air pressure sensor class (0x002D)
@@ -56,7 +55,7 @@ impl RequestHandler for AirPressure {
                     0x80 /* Operating status */ => {
                         return true;
                     }
-                    0xE0 /* Air pressure mesuarement */ => {
+                    0xE0 /* Air pressure mesuarement  */ => {
                         return true;
                     }
                     _ => {
@@ -64,14 +63,9 @@ impl RequestHandler for AirPressure {
                     }
                 }
             }
-            Esv::WriteRequest | Esv::WriteReadRequest => {
-                return false;
-            }
             _ => {
                 return false;
             }
         }
-
-        true
     }
 }
