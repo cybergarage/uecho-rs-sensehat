@@ -29,16 +29,8 @@ impl MonoLight {
         let m = Arc::new(Mutex::new(MonoLight {
             dev: Device::new_with_node(0x029101, node),
         }));
-        // m.lock().unwrap().dev.set_request_handler(m.clone());
+        m.lock().unwrap().dev.set_request_handler(m.clone());
         m
-    }
-
-    pub fn start(&mut self) -> bool {
-        self.dev.start()
-    }
-
-    pub fn stop(&mut self) -> bool {
-        self.dev.stop()
     }
 }
 
