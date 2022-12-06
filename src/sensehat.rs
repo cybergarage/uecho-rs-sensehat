@@ -12,19 +12,41 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use echonet::Node;
 use sensehat::SenseHat;
+use std::sync::{Arc, Mutex};
 
-pub struct Node<'a> {
+pub struct SenseHatNode<'a> {
+    node: Arc<Mutex<Node>>,
     sensehat: Option<SenseHat<'a>>,
 }
 
-impl Node<'_> {
-    pub fn new() -> Node<'static> {
-        let mut node = Node { sensehat: None };
+impl SenseHatNode<'_> {
+    pub fn new() -> SenseHatNode<'static> {
+        let mut node = SenseHatNode {
+            node: Node::new(),
+            sensehat: None,
+        };
         let sensehat = SenseHat::new();
         if sensehat.is_ok() {
             node.sensehat = Some(sensehat.unwrap());
         }
         node
+    }
+
+    pub fn start(&mut self) -> bool {
+        let mut node = self.node.lock().unwrap();
+        if !node.start() {
+            return false;
+        }
+        true
+    }
+
+    pub fn stop(&mut self) -> bool {
+        let mut node = self.node.lock().unwrap();
+        if !node.stop() {
+            return false;
+        }
+        true
     }
 }
