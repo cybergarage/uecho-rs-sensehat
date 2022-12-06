@@ -16,24 +16,25 @@ use echonet::{Device, Node};
 use sensehat::SenseHat;
 use std::sync::{Arc, Mutex};
 
+use crate::air_pressure::AirPressure;
+
 pub struct SenseHatNode<'a> {
     node: Arc<Mutex<Node>>,
-    sensehat: Option<SenseHat<'a>>,
-    devices: Vec<Device>,
+    sensehat: SenseHat<'a>,
+    air: Arc<Mutex<AirPressure>>,
 }
 
 impl SenseHatNode<'_> {
     pub fn new() -> SenseHatNode<'static> {
-        let mut node = SenseHatNode {
-            node: Node::new(),
-            sensehat: None,
-            devices: Vec::new(),
-        };
+        let node = Node::new();
         let sensehat = SenseHat::new();
-        if sensehat.is_ok() {
-            node.sensehat = Some(sensehat.unwrap());
+        let sensehat = sensehat.unwrap();
+        let air = AirPressure::new(node.clone());
+        SenseHatNode {
+            node: node,
+            sensehat: sensehat,
+            air: air,
         }
-        node
     }
 
     pub fn start(&mut self) -> bool {
