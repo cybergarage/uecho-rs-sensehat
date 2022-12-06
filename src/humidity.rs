@@ -16,7 +16,6 @@ use std::sync::Arc;
 use std::sync::Mutex;
 
 use echonet::protocol::{Esv, Property};
-use echonet::util::Bytes;
 use echonet::{Device, Node, RequestHandler};
 
 /// 3.1.18 Humidity sensor class (0x0012)
@@ -29,16 +28,8 @@ impl Humidity {
         let m = Arc::new(Mutex::new(Humidity {
             dev: Device::new_with_node(0x001201, node),
         }));
-        // m.lock().unwrap().dev.set_request_handler(m.clone());
+        m.lock().unwrap().dev.set_request_handler(m.clone());
         m
-    }
-
-    pub fn start(&mut self) -> bool {
-        self.dev.start()
-    }
-
-    pub fn stop(&mut self) -> bool {
-        self.dev.stop()
     }
 }
 
@@ -64,14 +55,9 @@ impl RequestHandler for Humidity {
                     }
                 }
             }
-            Esv::WriteRequest | Esv::WriteReadRequest => {
-                return false;
-            }
             _ => {
                 return false;
             }
         }
-
-        false
     }
 }
