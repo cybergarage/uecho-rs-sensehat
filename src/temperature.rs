@@ -31,14 +31,6 @@ impl Temperature {
         m.lock().unwrap().dev.set_request_handler(m.clone());
         m
     }
-
-    pub fn start(&mut self) -> bool {
-        self.dev.start()
-    }
-
-    pub fn stop(&mut self) -> bool {
-        self.dev.stop()
-    }
 }
 
 impl RequestHandler for Temperature {
@@ -63,14 +55,9 @@ impl RequestHandler for Temperature {
                     }
                 }
             }
-            Esv::WriteRequest | Esv::WriteReadRequest => {
-                return false;
-            }
             _ => {
                 return false;
             }
         }
-
-        false
     }
 }
