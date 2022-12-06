@@ -1,5 +1,5 @@
 [package]
-name = "uecho-sensehat"
+name = "echonet-sensehat"
 version = "1.0.0"
 edition = "2021"
 
@@ -11,3 +11,7 @@ signal-hook = "0.3.14"
 # sensehat = "1.1.0"
 sensehat = {git = "https://github.com/rust-embedded-community/sensehat-rs.git"}
 echonet = "1.0.0"
+
+[[bin]]
+name = "echonet-sensehat"
+path = "examples/echonet-sensehat.rs"
