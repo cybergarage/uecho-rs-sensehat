@@ -20,7 +20,7 @@ use echonet::{Device, Node, RequestHandler};
 
 /// Air pressure sensor class (0x002D)
 pub struct AirPressure {
-    dev: Device,
+    pub dev: Device,
 }
 
 impl AirPressure {
@@ -30,14 +30,6 @@ impl AirPressure {
         }));
         m.lock().unwrap().dev.set_request_handler(m.clone());
         m
-    }
-
-    pub fn start(&mut self) -> bool {
-        self.dev.start()
-    }
-
-    pub fn stop(&mut self) -> bool {
-        self.dev.stop()
     }
 }
 
