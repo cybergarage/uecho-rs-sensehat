@@ -12,5 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+pub use self::air_pressure::AirPressure;
+pub use self::humidity::Humidity;
+pub use self::mono_light::MonoLight;
+pub use self::sensehat::SenseHatNode;
+pub use self::temperature::Temperature;
+
+mod air_pressure;
+mod humidity;
 mod mono_light;
-mod node;
+mod sensehat;
+mod temperature;
+
+mod sensehat_test;

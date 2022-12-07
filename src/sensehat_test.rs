@@ -12,19 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use sensehat::SenseHat;
+#[cfg(test)]
+mod tests {
 
-pub struct Node<'a> {
-    sensehat: Option<SenseHat<'a>>,
-}
+    use crate::sensehat::SenseHatNode;
 
-impl Node<'_> {
-    pub fn new() -> Node<'static> {
-        let mut node = Node { sensehat: None };
-        let sensehat = SenseHat::new();
-        if sensehat.is_ok() {
-            node.sensehat = Some(sensehat.unwrap());
-        }
-        node
+    #[test]
+    fn node() {
+        let mut node = SenseHatNode::new();
+        assert!(node.start());
+        assert!(node.stop());
     }
 }

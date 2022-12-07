@@ -16,25 +16,24 @@ use std::sync::Arc;
 use std::sync::Mutex;
 
 use echonet::protocol::{Esv, Property};
-use echonet::util::Bytes;
 use echonet::{Device, Node, RequestHandler};
 
-/// 3.3.33 Mono functional lighting (0x0291)
-pub struct MonoLight {
+/// 3.1.17 Temperature sensor class (0x0011)
+pub struct Temperature {
     dev: Device,
 }
 
-impl MonoLight {
-    pub fn new(node: Arc<Mutex<Node>>) -> Arc<Mutex<MonoLight>> {
-        let m = Arc::new(Mutex::new(MonoLight {
-            dev: Device::new_with_node(0x029101, node),
+impl Temperature {
+    pub fn new(node: Arc<Mutex<Node>>) -> Arc<Mutex<Temperature>> {
+        let m = Arc::new(Mutex::new(Temperature {
+            dev: Device::new_with_node(0x001101, node),
         }));
         m.lock().unwrap().dev.set_request_handler(m.clone());
         m
     }
 }
 
-impl RequestHandler for MonoLight {
+impl RequestHandler for Temperature {
     fn property_request_received(&mut self, deoj: u32, esv: Esv, prop: &Property) -> bool {
         // Ignore all messages to other objects in the same node.
         if deoj != self.dev.code() {
@@ -48,7 +47,7 @@ impl RequestHandler for MonoLight {
                     0x80 /* Operating status */ => {
                         return true;
                     }
-                    0xB0 /* Illuminance level setting */ => {
+                    0xE0 /* Measured temperature value */ => {
                         return true;
                     }
                     _ => {
@@ -56,34 +55,9 @@ impl RequestHandler for MonoLight {
                     }
                 }
             }
-            Esv::WriteRequest | Esv::WriteReadRequest => {
-                let prop_code = prop.code();
-                let prop_bytes = prop.data();
-                match prop_code {
-                    0x80 /* Operating status */ => {
-                        let prop_u32 = Bytes::to_u32(prop_bytes);
-                        match prop_u32 {
-                            0x30 /* On */=> {
-                                return true;
-                            }
-                            0x31 /* Off */=> {
-                                return true;
-                            }
-                            _ => {
-                                return false;
-                            }
-                        }
-                    }
-                    0xB0 /* Illuminance level setting */ => {
-                        return true;
-                    }
-                    _ => {
-                        return false;
-                    }
-                }
+            _ => {
+                return false;
             }
-            _ => {}
         }
-        true
     }
 }
