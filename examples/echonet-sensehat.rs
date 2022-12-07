@@ -37,9 +37,9 @@ fn main() -> Result<(), Error> {
         }
     }
 
-    let node = SenseHatNode::new();
+    let mut node = SenseHatNode::new();
 
-    // node.lock().unwrap().start();
+    node.start();
 
     let term = Arc::new(AtomicBool::new(false));
     signal_hook::flag::register(signal_hook::consts::SIGTERM, Arc::clone(&term))?;
@@ -47,7 +47,7 @@ fn main() -> Result<(), Error> {
         thread::sleep(time::Duration::from_secs(1));
     }
 
-    // node.lock().unwrap().stop();
+    node.stop();
 
     Ok(())
 }
