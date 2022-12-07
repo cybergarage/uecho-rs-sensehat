@@ -20,7 +20,7 @@ use crate::air_pressure::AirPressure;
 
 pub struct SenseHatNode<'a> {
     node: Arc<Mutex<Node>>,
-    sensehat: SenseHat<'a>,
+    sensehat: Arc<Mutex<SenseHat<'a>>>,
     air: Arc<Mutex<AirPressure>>,
 }
 
@@ -28,7 +28,7 @@ impl SenseHatNode<'_> {
     pub fn new() -> SenseHatNode<'static> {
         let node = Node::new();
         let sensehat = SenseHat::new();
-        let sensehat = sensehat.unwrap();
+        let sensehat = Arc::new(Mutex::new(sensehat.unwrap()));
         let air = AirPressure::new(node.clone());
         SenseHatNode {
             node: node,
