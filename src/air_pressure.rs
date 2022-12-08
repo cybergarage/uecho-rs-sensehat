@@ -63,7 +63,8 @@ impl RequestHandler for AirPressure<'_> {
                         let pval = ((pressure.as_hectopascals() / 6553.3) * (0xFFFD as f64)) as u16;
                         let mut pbytes: [u8; 2] = [0;2];
                         Bytes::from_u32(pval.into(), &mut pbytes);
-                        self.dev.set_property(prop_code, &pbytes);
+                        println!("AirPressure = {:X}", pval);
+                        // self.dev.set_property(prop_code, &pbytes);
                         return true;
                     }
                     _ => {
