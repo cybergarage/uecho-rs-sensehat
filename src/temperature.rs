@@ -64,7 +64,8 @@ impl RequestHandler for Temperature<'_> {
                         pval = (pval + 2732) + 0xF554;
                         let mut pbytes: [u8; 2] = [0;2];
                         Bytes::from_u32(pval.into(), &mut pbytes);
-                        self.dev.set_property(prop_code, &pbytes);
+                        println!("Tempture = {:X}", pval);
+                        // self.dev.set_property(prop_code, &pbytes);
                         return true;
                     }
                     _ => {
