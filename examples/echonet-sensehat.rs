@@ -15,13 +15,10 @@
 use std::env;
 use std::io::Error;
 use std::sync::atomic::{AtomicBool, Ordering};
-use std::sync::{Arc, Mutex};
+use std::sync::Arc;
 use std::{thread, time};
 
 use echonet::log::Logger;
-use echonet::protocol::{Esv, Property};
-use echonet::util::Bytes;
-use echonet::{Device, ObjectCode, RequestHandler};
 
 use echonet_sensehat::SenseHatNode;
 
