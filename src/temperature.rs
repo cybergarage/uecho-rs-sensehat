@@ -32,7 +32,7 @@ impl Temperature<'_> {
         sensehat: Arc<Mutex<SenseHat<'static>>>,
     ) -> Arc<Mutex<Temperature<'static>>> {
         let m = Arc::new(Mutex::new(Temperature {
-            dev: Device::new_with_node(0x0011, node),
+            dev: Device::new_with_node(0x001101, node),
             sensehat: sensehat,
         }));
         m.lock().unwrap().dev.set_request_handler(m.clone());

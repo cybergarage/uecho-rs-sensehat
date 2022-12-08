@@ -24,10 +24,10 @@ use crate::temperature::Temperature;
 pub struct SenseHatNode<'a> {
     node: Arc<Mutex<Node>>,
     sensehat: Arc<Mutex<SenseHat<'a>>>,
-    air: Arc<Mutex<AirPressure<'a>>>,
+    // air: Arc<Mutex<AirPressure<'a>>>,
     temp: Arc<Mutex<Temperature<'a>>>,
-    hum: Arc<Mutex<Humidity<'a>>>,
-    light: Arc<Mutex<MonoLight<'a>>>,
+    // hum: Arc<Mutex<Humidity<'a>>>,
+    // light: Arc<Mutex<MonoLight<'a>>>,
 }
 
 impl SenseHatNode<'_> {
@@ -35,17 +35,17 @@ impl SenseHatNode<'_> {
         let node = Node::new();
         let sensehat = SenseHat::new();
         let sensehat = Arc::new(Mutex::new(sensehat.unwrap()));
-        let air = AirPressure::new(node.clone(), sensehat.clone());
+        // let air = AirPressure::new(node.clone(), sensehat.clone());
         let temp = Temperature::new(node.clone(), sensehat.clone());
-        let hum = Humidity::new(node.clone(), sensehat.clone());
-        let light = MonoLight::new(node.clone(), sensehat.clone());
+        // let hum = Humidity::new(node.clone(), sensehat.clone());
+        // let light = MonoLight::new(node.clone(), sensehat.clone());
         SenseHatNode {
             node: node,
             sensehat: sensehat,
-            air: air,
+            // air: air,
             temp: temp,
-            hum: hum,
-            light: light,
+            // hum: hum,
+            // light: light,
         }
     }
 
