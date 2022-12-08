@@ -63,7 +63,8 @@ impl RequestHandler for Humidity<'_> {
                         let pval = hum.as_percent() as u8;
                         let mut pbytes: [u8; 1] = [0;1];
                         Bytes::from_u32(pval.into(), &mut pbytes);
-                        self.dev.set_property(prop_code, &pbytes);
+                        println!("Humidity = {:X}", pval);
+                        // self.dev.set_property(prop_code, &pbytes);
                         return true;
                     }
                     _ => {
