@@ -55,12 +55,13 @@ impl RequestHandler for Temperature<'_> {
                         return true;
                     }
                     0xE0 /* Measured temperature value */ => {
-                        let pressure = self.sensehat.lock().unwrap().get_pressure();
-                        if pressure.is_err() {
+                        let temp = self.sensehat.lock().unwrap().get_temperature_from_pressure();
+                        if temp.is_err() {
                             return false;
                         }
-                        let pressure = pressure.unwrap();
-                        let pval = ((pressure.as_hectopascals() / 6553.3) * (0xFFFD as f64)) as u16;
+                        let temp = temp.unwrap();
+                        let mut pval = (temp.as_celsius() * 10.0) as u16;
+                        pval = (pval + 2732) + 0xF554;
                         let mut pbytes: [u8; 2] = [0;2];
                         Bytes::from_u32(pval.into(), &mut pbytes);
                         self.dev.set_property(prop_code, &pbytes);
