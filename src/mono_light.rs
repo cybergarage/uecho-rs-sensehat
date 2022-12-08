@@ -12,6 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use sensehat::SenseHat;
 use std::sync::Arc;
 use std::sync::Mutex;
 
@@ -20,21 +21,26 @@ use echonet::util::Bytes;
 use echonet::{Device, Node, RequestHandler};
 
 /// 3.3.33 Mono functional lighting (0x0291)
-pub struct MonoLight {
-    dev: Device,
+pub struct MonoLight<'a> {
+    pub dev: Device,
+    sensehat: Arc<Mutex<SenseHat<'a>>>,
 }
 
-impl MonoLight {
-    pub fn new(node: Arc<Mutex<Node>>) -> Arc<Mutex<MonoLight>> {
+impl MonoLight<'_> {
+    pub fn new(
+        node: Arc<Mutex<Node>>,
+        sensehat: Arc<Mutex<SenseHat<'static>>>,
+    ) -> Arc<Mutex<MonoLight<'static>>> {
         let m = Arc::new(Mutex::new(MonoLight {
             dev: Device::new_with_node(0x029101, node),
+            sensehat: sensehat,
         }));
         m.lock().unwrap().dev.set_request_handler(m.clone());
         m
     }
 }
 
-impl RequestHandler for MonoLight {
+impl RequestHandler for MonoLight<'_> {
     fn property_request_received(&mut self, deoj: u32, esv: Esv, prop: &Property) -> bool {
         // Ignore all messages to other objects in the same node.
         if deoj != self.dev.code() {
@@ -84,6 +90,5 @@ impl RequestHandler for MonoLight {
             }
             _ => {}
         }
-        true
     }
 }
