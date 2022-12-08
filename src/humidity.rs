@@ -32,7 +32,7 @@ impl Humidity<'_> {
         sensehat: Arc<Mutex<SenseHat<'static>>>,
     ) -> Arc<Mutex<Humidity<'static>>> {
         let m = Arc::new(Mutex::new(Humidity {
-            dev: Device::new_with_node(0x002D01, node),
+            dev: Device::new_with_node(0x001201, node),
             sensehat: sensehat,
         }));
         m.lock().unwrap().dev.set_request_handler(m.clone());
