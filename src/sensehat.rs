@@ -17,11 +17,17 @@ use sensehat::SenseHat;
 use std::sync::{Arc, Mutex};
 
 use crate::air_pressure::AirPressure;
+use crate::humidity::Humidity;
+use crate::mono_light::MonoLight;
+use crate::temperature::Temperature;
 
 pub struct SenseHatNode<'a> {
     node: Arc<Mutex<Node>>,
     sensehat: Arc<Mutex<SenseHat<'a>>>,
     air: Arc<Mutex<AirPressure<'a>>>,
+    temp: Arc<Mutex<Temperature<'a>>>,
+    hum: Arc<Mutex<Humidity<'a>>>,
+    light: Arc<Mutex<MonoLight<'a>>>,
 }
 
 impl SenseHatNode<'_> {
@@ -30,10 +36,15 @@ impl SenseHatNode<'_> {
         let sensehat = SenseHat::new();
         let sensehat = Arc::new(Mutex::new(sensehat.unwrap()));
         let air = AirPressure::new(node.clone(), sensehat.clone());
+        let temp = Temperature::new(node.clone(), sensehat.clone());
+        let hum = Humidity::new(node.clone(), sensehat.clone());
+        let light = MonoLight::new(node.clone(), sensehat.clone());
         SenseHatNode {
             node: node,
             sensehat: sensehat,
             air: air,
+            temp: temp,
+            light: light,
         }
     }
 
