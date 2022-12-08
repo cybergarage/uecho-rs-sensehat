@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use echonet::{Device, Node};
+use echonet::Node;
 use sensehat::SenseHat;
 use std::sync::{Arc, Mutex};
 
@@ -44,6 +44,7 @@ impl SenseHatNode<'_> {
             sensehat: sensehat,
             air: air,
             temp: temp,
+            hum: hum,
             light: light,
         }
     }
