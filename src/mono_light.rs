@@ -88,7 +88,9 @@ impl RequestHandler for MonoLight<'_> {
                     }
                 }
             }
-            _ => {}
+            _ => {
+                return false;
+            }
         }
     }
 }
