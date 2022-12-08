@@ -12,28 +12,35 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
+use sensehat::SenseHat;
 use std::sync::Arc;
 use std::sync::Mutex;
 
 use echonet::protocol::{Esv, Property};
+use echonet::util::Bytes;
 use echonet::{Device, Node, RequestHandler};
 
 /// 3.1.17 Temperature sensor class (0x0011)
-pub struct Temperature {
-    dev: Device,
+pub struct Temperature<'a> {
+    pub dev: Device,
+    sensehat: Arc<Mutex<SenseHat<'a>>>,
 }
 
-impl Temperature {
-    pub fn new(node: Arc<Mutex<Node>>) -> Arc<Mutex<Temperature>> {
+impl Temperature<'_> {
+    pub fn new(
+        node: Arc<Mutex<Node>>,
+        sensehat: Arc<Mutex<SenseHat<'static>>>,
+    ) -> Arc<Mutex<Temperature<'static>>> {
         let m = Arc::new(Mutex::new(Temperature {
-            dev: Device::new_with_node(0x001101, node),
+            dev: Device::new_with_node(0x002D01, node),
+            sensehat: sensehat,
         }));
         m.lock().unwrap().dev.set_request_handler(m.clone());
         m
     }
 }
 
-impl RequestHandler for Temperature {
+impl RequestHandler for Temperature<'_> {
     fn property_request_received(&mut self, deoj: u32, esv: Esv, prop: &Property) -> bool {
         // Ignore all messages to other objects in the same node.
         if deoj != self.dev.code() {
@@ -48,6 +55,15 @@ impl RequestHandler for Temperature {
                         return true;
                     }
                     0xE0 /* Measured temperature value */ => {
+                        let pressure = self.sensehat.lock().unwrap().get_pressure();
+                        if pressure.is_err() {
+                            return false;
+                        }
+                        let pressure = pressure.unwrap();
+                        let pval = ((pressure.as_hectopascals() / 6553.3) * (0xFFFD as f64)) as u16;
+                        let mut pbytes: [u8; 2] = [0;2];
+                        Bytes::from_u32(pval.into(), &mut pbytes);
+                        self.dev.set_property(prop_code, &pbytes);
                         return true;
                     }
                     _ => {
