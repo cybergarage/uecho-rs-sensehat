@@ -55,13 +55,13 @@ impl RequestHandler for Humidity<'_> {
                         return true;
                     }
                     0xE0 /* Measured value of relative humidity */ => {
-                        let pressure = self.sensehat.lock().unwrap().get_pressure();
-                        if pressure.is_err() {
+                        let hum = self.sensehat.lock().unwrap().get_humidity();
+                        if hum.is_err() {
                             return false;
                         }
-                        let pressure = pressure.unwrap();
-                        let pval = ((pressure.as_hectopascals() / 6553.3) * (0xFFFD as f64)) as u16;
-                        let mut pbytes: [u8; 2] = [0;2];
+                        let hum = hum.unwrap();
+                        let pval = hum.as_percent() as u8;
+                        let mut pbytes: [u8; 1] = [0;1];
                         Bytes::from_u32(pval.into(), &mut pbytes);
                         self.dev.set_property(prop_code, &pbytes);
                         return true;
