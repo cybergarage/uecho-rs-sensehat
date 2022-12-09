@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use sensehat::SenseHat;
 use std::sync::Arc;
 use std::sync::Mutex;
+
+use log::*;
+use sensehat::SenseHat;
 
 use echonet::protocol::{Esv, Property};
 use echonet::util::Bytes;
@@ -52,19 +54,22 @@ impl RequestHandler for Humidity<'_> {
                 let prop_code = prop.code();
                 match prop_code {
                     0x80 /* Operating status */ => {
+                        // The operating status is already turned on.
                         return true;
                     }
                     0xE0 /* Measured value of relative humidity */ => {
+                        // Gets the latest humidity value from Sense HAT.
                         let hum = self.sensehat.lock().unwrap().get_humidity();
                         if hum.is_err() {
                             return false;
                         }
                         let hum = hum.unwrap();
+                        info!("Humidity = {}", hum);
+                        // Sets the latest humidity value to the destination object.
                         let pval = hum.as_percent() as u8;
                         let mut pbytes: [u8; 1] = [0;1];
                         Bytes::from_u32(pval.into(), &mut pbytes);
-                        println!("Humidity = {:X}", pval);
-                        // self.dev.set_property(prop_code, &pbytes);
+                        deoj.set_property_data(prop_code, &pbytes);
                         return true;
                     }
                     _ => {
