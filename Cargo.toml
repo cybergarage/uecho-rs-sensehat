@@ -7,7 +7,7 @@ edition = "2021"
 
 [dependencies]
 log = "0.4"
-echonet = "1.1.0"
+echonet = "1.2.0"
 signal-hook = "0.3.14"
 sensehat = {git = "https://github.com/rust-embedded-community/sensehat-rs.git"}
 
