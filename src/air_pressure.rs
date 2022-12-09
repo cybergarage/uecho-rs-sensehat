@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use sensehat::SenseHat;
 use std::sync::Arc;
 use std::sync::Mutex;
+
+use log::*;
+use sensehat::SenseHat;
 
 use echonet::protocol::{Esv, Property};
 use echonet::util::Bytes;
@@ -52,19 +54,22 @@ impl RequestHandler for AirPressure<'_> {
                 let prop_code = prop.code();
                 match prop_code {
                     0x80 /* Operating status */ => {
+                        // The operating status is already turned on.
                         return true;
                     }
                     0xE0 /* Air pressure mesuarement  */ => {
+                        // Gets the latest air pressure value from Sense HAT.
                         let pressure = self.sensehat.lock().unwrap().get_pressure();
                         if pressure.is_err() {
                             return false;
                         }
                         let pressure = pressure.unwrap();
+                        info!("AirPressure = {}", pressure);
+                        // Sets the latest air pressure value to the destination object.
                         let pval = ((pressure.as_hectopascals() / 6553.3) * (0xFFFD as f64)) as u16;
                         let mut pbytes: [u8; 2] = [0;2];
                         Bytes::from_u32(pval.into(), &mut pbytes);
-                        println!("AirPressure = {:X}", pval);
-                        // self.dev.set_property(prop_code, &pbytes);
+                        deoj.set_property_data(prop_code, &pbytes);
                         return true;
                     }
                     _ => {
