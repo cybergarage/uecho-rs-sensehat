@@ -12,9 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use sensehat::SenseHat;
 use std::sync::Arc;
 use std::sync::Mutex;
+
+use log::*;
+use sensehat::SenseHat;
 
 use echonet::protocol::{Esv, Property};
 use echonet::util::Bytes;
@@ -52,20 +54,22 @@ impl RequestHandler for Temperature<'_> {
                 let prop_code = prop.code();
                 match prop_code {
                     0x80 /* Operating status */ => {
+                        // The operating status is already turned on.
                         return true;
                     }
                     0xE0 /* Measured temperature value */ => {
+                        // Gets the latest temperture value from Sense HAT.
                         let temp = self.sensehat.lock().unwrap().get_temperature_from_pressure();
                         if temp.is_err() {
                             return false;
                         }
                         let temp = temp.unwrap();
-                        let mut pval = (temp.as_celsius() * 10.0) as u16;
-                        pval = (pval + 2732) + 0xF554;
+                        info!("Temperature = {}", temp);
+                        // Sets the latest air pressure value to the destination object.
+                        let pval = (temp.as_celsius() * 10.0) as u16;
                         let mut pbytes: [u8; 2] = [0;2];
                         Bytes::from_u32(pval.into(), &mut pbytes);
-                        println!("Tempture = {:X}", pval);
-                        // self.dev.set_property(prop_code, &pbytes);
+                        deoj.set_property_data(prop_code, &pbytes);
                         return true;
                     }
                     _ => {
