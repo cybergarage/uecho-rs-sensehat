@@ -12,7 +12,7 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-use sensehat::SenseHat;
+use sensehat::{Colour, SenseHat};
 use std::sync::Arc;
 use std::sync::Mutex;
 
@@ -36,7 +36,14 @@ impl MonoLight<'_> {
             sensehat: sensehat,
         }));
         m.lock().unwrap().dev.set_request_handler(m.clone());
+        m.lock().unwrap().sensehat.lock().unwrap().clear().unwrap();
         m
+    }
+}
+
+impl Drop for MonoLight<'_> {
+    fn drop(&mut self) {
+        self.sensehat.lock().unwrap().clear().unwrap();
     }
 }
 
@@ -52,6 +59,7 @@ impl RequestHandler for MonoLight<'_> {
                 let prop_code = prop.code();
                 match prop_code {
                     0x80 /* Operating status */ => {
+                        // The operating status is already turned on.
                         return true;
                     }
                     0xB0 /* Illuminance level setting */ => {
@@ -70,9 +78,11 @@ impl RequestHandler for MonoLight<'_> {
                         let prop_u32 = Bytes::to_u32(prop_bytes);
                         match prop_u32 {
                             0x30 /* On */=> {
+                                self.sensehat.lock().unwrap().text("ON", Colour::WHITE, Colour::WHITE).unwrap();
                                 return true;
                             }
                             0x31 /* Off */=> {
+                                self.sensehat.lock().unwrap().clear().unwrap();
                                 return true;
                             }
                             _ => {
