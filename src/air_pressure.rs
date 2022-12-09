@@ -18,7 +18,7 @@ use std::sync::Mutex;
 
 use echonet::protocol::{Esv, Property};
 use echonet::util::Bytes;
-use echonet::{Device, Node, RequestHandler};
+use echonet::{Device, Node, Object, RequestHandler};
 
 /// Air pressure sensor class (0x002D)
 pub struct AirPressure<'a> {
@@ -41,9 +41,9 @@ impl AirPressure<'_> {
 }
 
 impl RequestHandler for AirPressure<'_> {
-    fn property_request_received(&mut self, deoj: u32, esv: Esv, prop: &Property) -> bool {
+    fn property_request_received(&mut self, deoj: &mut Object, esv: Esv, prop: &Property) -> bool {
         // Ignore all messages to other objects in the same node.
-        if deoj != self.dev.code() {
+        if deoj.code() != self.dev.code() {
             return false;
         }
 

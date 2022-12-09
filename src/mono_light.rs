@@ -18,7 +18,7 @@ use std::sync::Mutex;
 
 use echonet::protocol::{Esv, Property};
 use echonet::util::Bytes;
-use echonet::{Device, Node, RequestHandler};
+use echonet::{Device, Node, Object, RequestHandler};
 
 /// 3.3.33 Mono functional lighting (0x0291)
 pub struct MonoLight<'a> {
@@ -41,9 +41,9 @@ impl MonoLight<'_> {
 }
 
 impl RequestHandler for MonoLight<'_> {
-    fn property_request_received(&mut self, deoj: u32, esv: Esv, prop: &Property) -> bool {
+    fn property_request_received(&mut self, deoj: &mut Object, esv: Esv, prop: &Property) -> bool {
         // Ignore all messages to other objects in the same node.
-        if deoj != self.dev.code() {
+        if deoj.code() != self.dev.code() {
             return false;
         }
 
