@@ -73,11 +73,13 @@ impl RequestHandler for Temperature<'_> {
                         return true;
                     }
                     _ => {
-                        return false;
+                        // Allows all other read requests
+                        return true;
                     }
                 }
             }
             _ => {
+                // Denies all write requests
                 return false;
             }
         }

@@ -66,7 +66,8 @@ impl RequestHandler for MonoLight<'_> {
                         return true;
                     }
                     _ => {
-                        return false;
+                        // Allows all other read requests
+                        return true;
                     }
                 }
             }
@@ -91,10 +92,11 @@ impl RequestHandler for MonoLight<'_> {
                         }
                     }
                     0xB0 /* Illuminance level setting */ => {
-                        return true;
+                        return false;
                     }
                     _ => {
-                        return false;
+                // Denies all other write requests
+                return false;
                     }
                 }
             }
