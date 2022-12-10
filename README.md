@@ -12,6 +12,11 @@ The [ECHONET-Lite][enet] example implements the following standard devices which
 - Air pressure sensor class (0x002D)
 - Mono functional lighting (0x0291)
 
+## References
+
+- [Raspberry Pi Sense HAT](https://www.raspberrypi.com/products/sense-hat/)
+- [Raspberry Pi Documentation - Sense HAT](https://www.raspberrypi.com/documentation/accessories/sense-hat.html)
+
 [enet]:http://echonet.jp/english/
 [eneto]:https://echonet.jp/organization_en/
 [mra]:https://echonet.jp/spec_mra_rp1_en/
