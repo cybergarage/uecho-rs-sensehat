@@ -23,7 +23,6 @@ use echonet::log::Logger;
 use echonet_sensehat::SenseHatNode;
 
 fn main() -> Result<(), Error> {
-    Logger::init();
     for arg in env::args() {
         print!("{}", arg);
         match arg.as_str() {
