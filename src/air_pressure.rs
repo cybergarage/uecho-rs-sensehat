@@ -22,7 +22,7 @@ use echonet::protocol::{Esv, Property};
 use echonet::util::Bytes;
 use echonet::{Device, Node, Object, RequestHandler};
 
-/// Air pressure sensor class (0x002D)
+/// 3.1.44 Air pressure sensor class (0x002D)
 pub struct AirPressure<'a> {
     pub dev: Device,
     sensehat: Arc<Mutex<SenseHat<'a>>>,
