@@ -18,7 +18,7 @@ use std::sync::Mutex;
 use log::*;
 use sensehat::SenseHat;
 
-use echonet::protocol::{Esv, Property};
+use echonet::protocol::{Property, ESV};
 use echonet::util::Bytes;
 use echonet::{Device, Node, Object, RequestHandler};
 
@@ -43,14 +43,14 @@ impl AirPressure<'_> {
 }
 
 impl RequestHandler for AirPressure<'_> {
-    fn property_request_received(&mut self, deoj: &mut Object, esv: Esv, prop: &Property) -> bool {
+    fn property_request_received(&mut self, deoj: &mut Object, esv: ESV, prop: &Property) -> bool {
         // Ignore all messages to other objects in the same node.
         if deoj.code() != self.dev.code() {
             return false;
         }
 
         match esv {
-            Esv::ReadRequest | Esv::NotificationRequest => {
+            ESV::ReadRequest | ESV::NotificationRequest => {
                 let prop_code = prop.code();
                 match prop_code {
                     0x80 /* Operating status */ => {
