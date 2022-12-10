@@ -5,7 +5,7 @@ The repository provides an example implementation of [ECHONET-Lite][enet] device
 
 ![](img/uecho-sensehat.jpg)
 
-The [ECHONET-Lite][enet] example implements the following standard devices which are defined by [Machine Readable Appendix][mra] provided by [the ECHONET Consortium][eneto] using Sense HAT sensors.
+The [ECHONET-Lite][enet] example simulates the following standard devices which are defined by [Machine Readable Appendix][mra] provided by [the ECHONET Consortium][eneto] using Sense HAT sensors.
 
 - Temperature sensor class (0x0011)
 - Humidity sensor class (0x0012)
