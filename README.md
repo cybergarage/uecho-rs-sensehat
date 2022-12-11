@@ -1,6 +1,3 @@
-[![crates.io](https://img.shields.io/crates/v/echonet-sensehat.svg)](https://crates.io/crates/echonet-sensehat)
-[![docs.rs](https://img.shields.io/badge/Rustdoc-docs.rs-blueviolet)](https://docs.rs/echonet-sensehat)
-
 The [uecho-rs](https://github.com/cybergarage/uecho-rs) is a portable, cross-platform development framework for Rust developers to create [ECHONET-Lite][enet] controller and device applications.
 The repository provides an example implementation of [ECHONET-Lite][enet] device using the [uecho-rs](https://github.com/cybergarage/uecho-rs) on [Raspberry Pi Sense HAT](https://www.raspberrypi.com/products/sense-hat/).
 
