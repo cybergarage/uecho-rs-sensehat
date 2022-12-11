@@ -1,5 +1,3 @@
-# uecho-rs-sensehat
-
 [![crates.io](https://img.shields.io/crates/v/echonet-sensehat.svg)](https://crates.io/crates/echonet-sensehat)
 [![docs.rs](https://img.shields.io/badge/Rustdoc-docs.rs-blueviolet)](https://docs.rs/echonet-sensehat)
 
