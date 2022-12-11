@@ -2,6 +2,13 @@
 name = "echonet-sensehat"
 version = "1.0.0"
 edition = "2021"
+readme = "README.md"
+homepage = "http://www.cybergarage.org/"
+repository = "https://github.com/cybergarage/uecho-rs-sensehat"
+description = "Example implementation of ECHONET-Lite device using the uecho-rs on Raspberry Pi Sense HAT"
+license = "Apache-2.0"
+categories = ["network-programming"]
+keywords = ["echonet", "echonet-lite"]
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
