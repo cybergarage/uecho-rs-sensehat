@@ -37,17 +37,13 @@ impl SenseHatNode<'_> {
         let node = Node::new();
         let sensehat = SenseHat::new();
         let sensehat = Arc::new(Mutex::new(sensehat.unwrap()));
-        let air = AirPressure::new(node.clone(), sensehat.clone());
-        let temp = Temperature::new(node.clone(), sensehat.clone());
-        let hum = Humidity::new(node.clone(), sensehat.clone());
-        let light = MonoLight::new(node.clone(), sensehat.clone());
         SenseHatNode {
             node: node,
             sensehat: sensehat,
-            air: air,
-            temp: temp,
-            hum: hum,
-            light: light,
+            air: AirPressure::new(node.clone(), sensehat.clone()),
+            temp: Temperature::new(node.clone(), sensehat.clone()),
+            hum: Humidity::new(node.clone(), sensehat.clone()),
+            light: MonoLight::new(node.clone(), sensehat.clone()),
         }
     }
 
