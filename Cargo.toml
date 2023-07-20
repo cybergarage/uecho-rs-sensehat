@@ -14,7 +14,7 @@ keywords = ["echonet", "echonet-lite"]
 
 [dependencies]
 log = "0.4"
-echonet = "1.2.6"
+echonet = "1.2.8"
 signal-hook = "0.3.14"
 sensehat = {git = "https://github.com/rust-embedded-community/sensehat-rs.git"}
 
